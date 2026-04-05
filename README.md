@@ -4,7 +4,7 @@ A rule-based resume screening system built with Python, Flask, and SQLite.
 Filters job applicants automatically using predefined selection rules based on recruiter criteria.
 
 
-## Project Structure
+# Project Structure
 
 resume_screener/
 ├── app.py                          # Flask application and screening rules
@@ -15,7 +15,7 @@ resume_screener/
     └── index.html                  # Frontend UI
 
 
-## Technologies
+# Technologies
 
 - Python 3
 - Flask (web framework)
@@ -23,7 +23,7 @@ resume_screener/
 - HTML, CSS, JavaScript (frontend)
 
 
-## Selection Rules (Knowledge Base)
+# Selection Rules (Knowledge Base)
 
 | Rule   | Condition                                                   | Effect                  |
 | ------ | ----------------------------------------------------------- | ----------------------- |
@@ -34,7 +34,7 @@ resume_screener/
 | Final  | Rule 1 AND Rule 2 AND Rule 3                                | SHORTLISTED or REJECTED |
 
 
-## How to Run
+# How to Run
 
 **Step 1 — Clone the repository**
 
@@ -66,7 +66,7 @@ python app.py
 http://127.0.0.1:5000
 
 
-## Features
+# Features
 
 - Dashboard with live stats and charts from the 15,000-candidate dataset
 - Candidate browser with filters by status, skill, degree, and certification
