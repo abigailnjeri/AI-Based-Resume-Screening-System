@@ -39,7 +39,7 @@ AI_Based_Resume_Screening_System/
 
 *Step 1 — Clone the repository*
 
-git clone https://github.com/your-username/resume-screener-ai.git
+git clone https://github.com/your-username/AI-Based-Resume-Screening-System/.git
 cd resume-screener-ai
 
 *Step 2 — Create a virtual environment*
@@ -62,9 +62,6 @@ python app.py
 
 
 *Step 5 — Open in browser*
-
-
-http://127.0.0.1:5000
 
 
 **Features**
