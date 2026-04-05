@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+resume_screener.db
+*.db
+.env
+.DS_Store
