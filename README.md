@@ -6,13 +6,14 @@ Filters job applicants automatically using predefined selection rules based on r
 
 **Project Structure**
 
-resume_screener/
-├── app.py                          # Flask application and screening rules
-├── requirements.txt                # Python dependencies
-├── Task4_resume_dataset_15000.csv  # Dataset (15,000 candidates)
-├── .gitignore
-└── templates/
-    └── index.html                  # Frontend UI
+AI_Based_Resume_Screening_System/
+- `app.py` - Flask application and screening rules
+- `requirements.txt` - Python dependencies  
+- `Task4_resume_dataset_15000.csv` - Dataset (15,000 candidates)
+- `resume_screener.db` - SQLite database
+- `templates/index.html` - Frontend UI
+- `.gitignore`
+- `README.md`
 
 
 **Technologies**
