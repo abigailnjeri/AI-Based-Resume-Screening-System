@@ -37,31 +37,31 @@ AI_Based_Resume_Screening_System/
 
 **How to Run**
 
-*Step 1 — Clone the repository*
+*Step 1 - Clone the repository*
 
 git clone https://github.com/your-username/AI-Based-Resume-Screening-System/.git
-cd resume-screener-ai
+cd AI-Based-Resume-Screening-System
 
-*Step 2 — Create a virtual environment*
+*Step 2 - Create a virtual environment*
 
 
 python -m venv venv
 venv\Scripts\activate
 
 
-*Step 3 — Install dependencies*
+*Step 3 - Install dependencies*
 
 
 pip install -r requirements.txt
 
 
-*Step 4 — Run the application*
+*Step 4 - Run the application*
 
 
 python app.py
 
 
-*Step 5 — Open in browser*
+*Step 5 - Open in browser*
 
 
 **Features**
