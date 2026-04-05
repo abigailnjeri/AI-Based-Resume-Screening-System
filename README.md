@@ -3,11 +3,9 @@
 A rule-based resume screening system built with Python, Flask, and SQLite.
 Filters job applicants automatically using predefined selection rules based on recruiter criteria.
 
----
 
 ## Project Structure
 
-```
 resume_screener/
 ├── app.py                          # Flask application and screening rules
 ├── requirements.txt                # Python dependencies
@@ -15,9 +13,7 @@ resume_screener/
 ├── .gitignore
 └── templates/
     └── index.html                  # Frontend UI
-```
 
----
 
 ## Technologies
 
@@ -26,7 +22,6 @@ resume_screener/
 - SQLite (database)
 - HTML, CSS, JavaScript (frontend)
 
----
 
 ## Selection Rules (Knowledge Base)
 
@@ -38,41 +33,37 @@ resume_screener/
 | Rule 4 | Certification is AWS or Google Cloud                        | +15 score bonus         |
 | Final  | Rule 1 AND Rule 2 AND Rule 3                                | SHORTLISTED or REJECTED |
 
----
 
 ## How to Run
 
 **Step 1 — Clone the repository**
 
-```
 git clone https://github.com/your-username/resume-screener-ai.git
 cd resume-screener-ai
-```
 
 **Step 2 — Create a virtual environment**
 
-```
+
 python -m venv venv
 venv\Scripts\activate
-```
+
 
 **Step 3 — Install dependencies**
 
-```
+
 pip install -r requirements.txt
-```
+
 
 **Step 4 — Run the application**
 
-```
+
 python app.py
-```
+
 
 **Step 5 — Open in browser**
 
-```
+
 http://127.0.0.1:5000
-```
 
 ---
 
