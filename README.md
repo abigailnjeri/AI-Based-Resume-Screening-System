@@ -40,12 +40,14 @@ AI_Based_Resume_Screening_System/
 *Step 1 - Clone the repository*
 
 git clone https://github.com/your-username/AI-Based-Resume-Screening-System/.git
+
 cd AI-Based-Resume-Screening-System
 
 *Step 2 - Create a virtual environment*
 
 
 python -m venv venv
+
 venv\Scripts\activate
 
 
