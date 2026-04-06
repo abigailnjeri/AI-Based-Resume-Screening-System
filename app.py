@@ -9,7 +9,7 @@ DB_PATH = "resume_screener.db"
 # 
 #  KNOWLEDGE BASE: Selection Rules
 # 
-REQUIRED_SKILLS = {"python", "java", "sql", "react", "machine learning"}
+REQUIRED_SKILLS = {"python", "java", "sql", "react", "machine learning", "javascript"}
 REQUIRED_DEGREES = {"computer science", "information technology",
                     "software engineering", "data science"}
 MIN_GPA = 3.0
@@ -185,31 +185,29 @@ def stats():
 
 @app.route("/api/screen", methods=["POST"])
 def screen_single():
-    data = request.get_json()
+    data = request.get_json() or {}
 
-    # ✅ TASK 1: Name validation
+    # ✅ Task 1: Name validation
     name = data.get("name")
     if not name or str(name).strip() == "":
         return jsonify({
             "error": "Name is required for screening"
         }), 400
 
-    # ✅ TASK 2: Degree validation
+    # ✅ Task 2: Degree validation
     degree = data.get("degree")
 
-    # ❌ No degree selected
     if not degree or str(degree).strip() == "":
         return jsonify({
             "error": "Please select a Degree/Field of Study before screening"
         }), 400
 
-    # ❌ Degree = "Other"
     if str(degree).lower() == "other":
         return jsonify({
             "message": "Rejected"
         })
 
-    # ✅ Continue normal processing
+    # ✅ Continue processing
     result = apply_rules(data)
 
     return jsonify({**data, **result})
