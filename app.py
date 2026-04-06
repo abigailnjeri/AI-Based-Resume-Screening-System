@@ -12,7 +12,7 @@ DB_PATH = "resume_screener.db"
 # 
 #  KNOWLEDGE BASE: Selection Rules
 # 
-REQUIRED_SKILLS = {"python", "java", "sql", "react", "machine learning"}
+REQUIRED_SKILLS = {"python", "java", "sql", "react", "machine learning", "javascript"}
 REQUIRED_DEGREES = {"computer science", "information technology",
                     "software engineering", "data science"}
 MIN_GPA = 3.0
@@ -106,11 +106,14 @@ def init_db():
 def load_csv(path: str):
     db = sqlite3.connect(DB_PATH)
     db.execute("DELETE FROM candidates")
+
     with open(path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         rows = []
+
         for row in reader:
             result = apply_rules(row)
+
             rows.append((
                 row.get("candidate_id"),
                 row.get("degree"),
@@ -129,6 +132,7 @@ def load_csv(path: str):
                 1 if result["rule4_cert"]       else 0,
                 result["rejection_reasons"]
             ))
+
     db.executemany("""
         INSERT INTO candidates
             (candidate_id, degree, gpa, skills, experience_years,
@@ -137,6 +141,7 @@ def load_csv(path: str):
              rule3_gpa, rule4_cert, rejection_reasons)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     """, rows)
+
     db.commit()
     db.close()
     return len(rows)
@@ -157,15 +162,18 @@ def stats():
     shortlisted = db.execute("SELECT COUNT(*) FROM candidates WHERE shortlisted=1").fetchone()[0]
     rejected    = total - shortlisted
     avg_score   = db.execute("SELECT ROUND(AVG(score),1) FROM candidates").fetchone()[0] or 0
+
     top_skills  = db.execute("""
         SELECT skills, COUNT(*) as cnt FROM candidates
         GROUP BY skills ORDER BY cnt DESC LIMIT 6
     """).fetchall()
+
     by_degree   = db.execute("""
         SELECT degree, COUNT(*) as total,
                SUM(shortlisted) as passed
         FROM candidates GROUP BY degree
     """).fetchall()
+
     return jsonify({
         "total":        total,
         "shortlisted":  shortlisted,
@@ -197,9 +205,11 @@ def screen_single():
 @app.route("/api/filters")
 def filters():
     db      = get_db()
+
     skills  = db.execute("SELECT DISTINCT skills FROM candidates ORDER BY skills").fetchall()
     degrees = db.execute("SELECT DISTINCT degree FROM candidates ORDER BY degree").fetchall()
     certs   = db.execute("SELECT DISTINCT certification FROM candidates WHERE certification IS NOT NULL ORDER BY certification").fetchall()
+
     return jsonify({
         "skills":  [r[0] for r in skills],
         "degrees": [r[0] for r in degrees],
@@ -212,6 +222,7 @@ def filters():
 # 
 if __name__ == "__main__":
     init_db()
+
     csv_file = "Task4_resume_dataset_15000.csv"
     if os.path.exists(csv_file):
         n = load_csv(csv_file)
