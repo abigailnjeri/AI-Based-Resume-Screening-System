@@ -1,7 +1,4 @@
 from flask import Flask, render_template, request, jsonify, g
-from resume_parser import read_pdf, read_docx, clean_text
-from matcher import calculate_match
-
 import sqlite3
 import csv
 import os
@@ -27,6 +24,7 @@ def apply_rules(candidate: dict) -> dict:
     gpa        = float(candidate.get("gpa") or 0)
     exp        = int(candidate.get("experience_years") or 0)
 
+    # Rule checks
     has_skill = any(s in skills_raw for s in REQUIRED_SKILLS)
     has_experience = exp >= MIN_EXPERIENCE
     has_gpa = gpa >= MIN_GPA
@@ -35,6 +33,7 @@ def apply_rules(candidate: dict) -> dict:
 
     shortlisted = has_skill and has_experience and has_gpa
 
+    # Scoring
     score = 0
     if has_skill:        score += 30
     if has_experience:   score += 25
@@ -106,11 +105,14 @@ def init_db():
 def load_csv(path: str):
     db = sqlite3.connect(DB_PATH)
     db.execute("DELETE FROM candidates")
+
     with open(path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         rows = []
+
         for row in reader:
             result = apply_rules(row)
+
             rows.append((
                 row.get("candidate_id"),
                 row.get("degree"),
@@ -129,6 +131,7 @@ def load_csv(path: str):
                 1 if result["rule4_cert"]       else 0,
                 result["rejection_reasons"]
             ))
+
     db.executemany("""
         INSERT INTO candidates
             (candidate_id, degree, gpa, skills, experience_years,
@@ -137,6 +140,7 @@ def load_csv(path: str):
              rule3_gpa, rule4_cert, rejection_reasons)
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     """, rows)
+
     db.commit()
     db.close()
     return len(rows)
@@ -157,15 +161,18 @@ def stats():
     shortlisted = db.execute("SELECT COUNT(*) FROM candidates WHERE shortlisted=1").fetchone()[0]
     rejected    = total - shortlisted
     avg_score   = db.execute("SELECT ROUND(AVG(score),1) FROM candidates").fetchone()[0] or 0
+
     top_skills  = db.execute("""
         SELECT skills, COUNT(*) as cnt FROM candidates
         GROUP BY skills ORDER BY cnt DESC LIMIT 6
     """).fetchall()
+
     by_degree   = db.execute("""
         SELECT degree, COUNT(*) as total,
                SUM(shortlisted) as passed
         FROM candidates GROUP BY degree
     """).fetchall()
+
     return jsonify({
         "total":        total,
         "shortlisted":  shortlisted,
@@ -178,17 +185,31 @@ def stats():
 
 @app.route("/api/screen", methods=["POST"])
 def screen_single():
-    """Screen a single candidate submitted via the manual form."""
     data = request.get_json()
 
-    # ✅ NEW: Name validation (TASK 1)
+    # ✅ TASK 1: Name validation
     name = data.get("name")
-
     if not name or str(name).strip() == "":
         return jsonify({
             "error": "Name is required for screening"
         }), 400
 
+    # ✅ TASK 2: Degree validation
+    degree = data.get("degree")
+
+    # ❌ No degree selected
+    if not degree or str(degree).strip() == "":
+        return jsonify({
+            "error": "Please select a Degree/Field of Study before screening"
+        }), 400
+
+    # ❌ Degree = "Other"
+    if str(degree).lower() == "other":
+        return jsonify({
+            "message": "Rejected"
+        })
+
+    # ✅ Continue normal processing
     result = apply_rules(data)
 
     return jsonify({**data, **result})
@@ -197,9 +218,11 @@ def screen_single():
 @app.route("/api/filters")
 def filters():
     db      = get_db()
+
     skills  = db.execute("SELECT DISTINCT skills FROM candidates ORDER BY skills").fetchall()
     degrees = db.execute("SELECT DISTINCT degree FROM candidates ORDER BY degree").fetchall()
     certs   = db.execute("SELECT DISTINCT certification FROM candidates WHERE certification IS NOT NULL ORDER BY certification").fetchall()
+
     return jsonify({
         "skills":  [r[0] for r in skills],
         "degrees": [r[0] for r in degrees],
@@ -212,10 +235,12 @@ def filters():
 # 
 if __name__ == "__main__":
     init_db()
+
     csv_file = "Task4_resume_dataset_15000.csv"
     if os.path.exists(csv_file):
         n = load_csv(csv_file)
         print(f"Loaded {n} candidates from {csv_file}")
     else:
         print(f"CSV not found at {csv_file} — place it next to app.py and restart.")
+
     app.run(debug=True, port=5000)
