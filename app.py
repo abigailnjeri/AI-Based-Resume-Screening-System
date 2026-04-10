@@ -275,3 +275,11 @@ if __name__ == "__main__":
     else:
         print(f"⚠️   CSV not found at {csv_file} — place it next to app.py and restart.")
     app.run(debug=True, port=5000)
+
+#
+#   PRODUCTION ON RENDER
+#
+import os
+port = int(os.environ.get('PORT', 5000))
+
+app.run(host='0.0.0.0', port=port, debug=False)

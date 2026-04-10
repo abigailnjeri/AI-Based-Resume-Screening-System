@@ -3,4 +3,4 @@ services:
     name: resume-screener-ai
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    startCommand: gunicorn app:app
